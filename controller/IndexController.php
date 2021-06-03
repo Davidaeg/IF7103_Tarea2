@@ -10,6 +10,17 @@ class IndexController
 
     public function showIndex()
     {
+        /**
+         * Carga los datos sólo una vez, al cerrar el navegador 
+         * la sessión se destruye, session_set_cookie_params(0); en el index.php
+         */
+        if(!isset($_SESSION['TRAINING_DONE'])){
+            require_once 'algorithms/Training.php';
+            $train = new Training();
+            $train->training();
+            $_SESSION['TRAINING_DONE'] = true;      
+        }
+        
         $this->view->show("IndexView.php");
     } 
 

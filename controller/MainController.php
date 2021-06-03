@@ -3,7 +3,7 @@
 class MainController
 {
     public function __construct()
-    {
+    {   
         $this->view = new View();
     }
 
@@ -15,19 +15,16 @@ class MainController
         $input['CA'] = $_POST['ca'];
         $input['EA'] = $_POST['ea'];
 
-        //guarda en $data un array con la tabla resultante de la consulta
-        require_once 'model/IndexModel.php';
-        $model = new IndexModel();
-        $data = $model->exec_query('sp_get_estilo_recinto()'); 
+        //Se define las columnas que se van a evaluar
+        $evaluated_data = ['EC', 'OR', 'CA', 'EA']; 
 
-        $evaluated_data = ['EC', 'OR', 'CA', 'EA']; //Se define las columnas que se van a evaluar
-
-        // se envía a calcular distancia de euclides. último parametro: el dato que quiere predecir
+        // se envía a cladificar con naive bayes. último parametro: el nombre del archivo con los datos
         require_once 'algorithms/BayeClassifier.php';
         $algorithms = new BayeClassifier();
-        $style = $algorithms->baye_classification($data, $input, $evaluated_data, 'Estilo');
+        $style = $algorithms->baye_classification($input, $evaluated_data, 'Style1');
+        // echo  json_encode($style);
 
-        //se obtiene el resultado y se interpreta 
+        // se obtiene el resultado y se interpreta 
         switch ($style) {
             case 0:
                 $style = 'Acomodador';
@@ -42,7 +39,7 @@ class MainController
                 $style = 'Asimilador';
                 break;
         }
-        echo  strval($style);   //envia respuesta
+        echo  $style;   //envia respuesta
     }
 
     public function getCampus()
@@ -52,19 +49,13 @@ class MainController
         $input['Promedio'] = $_POST['average'];
         $input['Estilo'] = $_POST['style'];
 
-        //guarda en $data un array con la tabla resultante de la consulta
-        require_once 'model/IndexModel.php';
-        $model = new IndexModel();
-        $data = $model->exec_query('sp_get_sexo_estilo()');
-
-        //Se define las columnas que se van a evaluar
         $evaluated_data = ['Sexo', 'Promedio', 'Estilo'];
 
-        // se envía a calcular distancia de euclides. último parametro: el dato que quiere predecir
+        // se envía a cladificar con naive bayes. último parametro: el nombre del archivo con los datos
         require_once 'algorithms/BayeClassifier.php';
         $algorithms = new BayeClassifier();
-        $campus = $algorithms->baye_classification($data, $input, $evaluated_data, 'Recinto');
-        //echo  json_encode($campus);
+        $campus = $algorithms->baye_classification($input, $evaluated_data, 'Campus');
+        // echo  json_encode($campus);
         
         //se obtiene el resultado,se interpreta y se envía respuesta
         if ($campus == 0)
@@ -80,18 +71,14 @@ class MainController
         $input['Promedio'] = $_POST['average'];
         $input['Recinto'] = $_POST['campus'];
 
-        //guarda en $data un array con la tabla resultante de la consulta
-        require_once 'model/IndexModel.php';
-        $model = new IndexModel();
-        $data = $model->exec_query('sp_get_sexo_estilo()');
-
         //Se define las columnas que se van a evaluar
         $evaluated_data = ['Estilo', 'Promedio', 'Recinto'];
 
-        // se envía a calcular distancia de euclides. último parametro: el dato que quiere predecir
+        // se envía a cladificar con naive bayes. último parametro: el nombre del archivo con los datos
         require_once 'algorithms/BayeClassifier.php';
         $algorithms = new BayeClassifier();
-        $gender = $algorithms->baye_classification($data, $input, $evaluated_data, 'Sexo');
+        $gender = $algorithms->baye_classification($input, $evaluated_data,'Gender');
+        // echo  json_encode($gender);
 
         //se obtiene el resultado,se interpreta y se envía respuesta
         if ($gender == 0)
@@ -107,18 +94,13 @@ class MainController
         $input['Promedio'] = $_POST['average'];
         $input['Recinto'] = $_POST['campus'];
 
-        //guarda en $data un array con la tabla resultante de la consulta
-        require_once 'model/IndexModel.php';
-        $model = new IndexModel();
-        $data = $model->exec_query('sp_get_sexo_estilo()');
-
         //Se define las columnas que se van a evaluar
         $evaluated_data = ['Sexo', 'Promedio', 'Recinto'];
 
-        // se envía a calcular distancia de euclides. último parametro: el dato que quiere predecir
+        // se envía a cladificar con naive bayes. último parametro: el nombre del archivo con los datos
         require_once 'algorithms/BayeClassifier.php';
         $algorithms = new BayeClassifier();
-        $style = $algorithms->baye_classification($data, $input, $evaluated_data, 'Estilo');
+        $style = $algorithms->baye_classification($input, $evaluated_data, 'Style2');
 
         //se obtiene el resultado,se interpreta y se envía respuesta
         if ($style == 0)
@@ -142,18 +124,13 @@ class MainController
         $input['G'] = $_POST['F'];
         $input['H'] = $_POST['F'];
 
-        //guarda en $data un array con la tabla resultante de la consulta
-        require_once 'model/IndexModel.php';
-        $model = new IndexModel();
-        $data = $model->exec_query('sp_get_profesores()');
-
         //Se define las columnas que se van a evaluar
         $evaluated_data = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 
-        // se envía a calcular distancia de euclides. último parametro: el dato que quiere predecir
+        // se envía a cladificar con naive bayes. último parametro: el nombre del archivo con los datos
         require_once 'algorithms/BayeClassifier.php';
         $algorithms = new BayeClassifier();
-        $type = $algorithms->baye_classification($data, $input, $evaluated_data, 'Class');
+        $type = $algorithms->baye_classification($input, $evaluated_data, 'Professor');
 
         //se obtiene el resultado,se interpreta y se envía respuesta
         if ($type == 1)
@@ -173,18 +150,13 @@ class MainController
         $input['CA'] = $_POST['CA'];
         $input['CO'] = $_POST['CO'];
 
-        //guarda en $data un array con la tabla resultante de la consulta
-        require_once 'model/IndexModel.php';
-        $model = new IndexModel();
-        $data = $model->exec_query('sp_get_redes()');
-
         //Se define las columnas que se van a evaluar
         $evaluated_data = ['RE', 'LI', 'CA', 'CO'];
 
-        // se envía a calcular distancia de euclides. último parametro: el dato que quiere predecir
+        // se envía a cladificar con naive bayes. último parametro: el nombre del archivo con los datos
         require_once 'algorithms/BayeClassifier.php';
         $algorithms = new BayeClassifier();
-        $type = $algorithms->baye_classification($data, $input, $evaluated_data, 'Class');
+        $type = $algorithms->baye_classification($input, $evaluated_data, 'Network');
 
         //se obtiene el resultado,se interpreta y se envía respuesta
         if ($type == 1)
